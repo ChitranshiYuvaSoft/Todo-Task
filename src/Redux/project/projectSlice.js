@@ -1,118 +1,92 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Data from "../../Data";
 
 const initialState = {
-  projectIndex:0,
-  projectData: [
-    {
-      _id: 1,
-      title: "Project Redux Title - 1",
-      featureData: [
-        {
-          _id: 11,
-          title: "Feature Redux Title - 1.1",
-          todoData: [
-            {
-              _id: 111,
-              title: "Todo Redux Title - 1",
-            },
-          ],
-        },
-
-        {
-          _id: 12,
-          title: "Feature Redux Title - 1.2",
-          todoData: [
-            {
-              _id: 121,
-              title: "Todo Redux Title - 1",
-            },
-            {
-              _id: 122,
-              title: "Todo Redux Title - 1",
-            },
-            {
-              _id: 123,
-              title: "Todo Redux Title - 1",
-            },
-          ],
-        },
-      ],
-    },
-
-
-
-
-
-    {
-      _id: 2,
-      title: "Project Redux Title - 2",
-      featureData: [
-        {
-          _id: 21,
-          title: "Feature Redux Title - 2.1",
-          todoData: [
-            {
-              _id: 211,
-              title: "Todo Redux Title - 1",
-            },
-            {
-              _id: 221,
-              title: "Todo Redux Title - 1",
-            },
-          ],
-        },
-      ],
-    },
-
-
-
-
-
-
-
-
-
-    {
-      _id: 3,
-      title: "Project Redux Title - 3",
-      featureData: [
-        {
-          _id: 31,
-          title: "Feature Redux Title - 3.1",
-          todoData: [
-            {
-              _id: 311,
-              title: "Todo Redux Title - 1",
-            },
-          ],
-        },
-        {
-          _id: 32,
-          title: "Feature Redux Title - 3.2",
-          todoData: [],
-        },
-      ],
-    },
-  ],
+  projectIndex: 0,
+  featureIndex: 0,
+  projectData: Data,
+  isSuccess : false,
+  isError : false,
+  isLoading : false,
+  edit : {project : {}, isEdit : false}
 };
 
 const projectSlice = createSlice({
   name: "todoData",
   initialState,
   reducers: {
-    indexUpdate : (state, action) => {
-      console.log(action.payload, "from slice")
-      const indexData = action.payload
-      // console.log(projectIndex, "slice Data")
+    indexUpdate: (state, action) => {
+      // console.log(action.payload, "from slice");
+      const indexData = action.payload;
       return {
         ...state,
-        projectIndex : indexData
+        projectIndex: indexData,
+      };
+    },
+
+    featureIndexUpdate: (state, action) => {
+      // console.log(action.payload, 7365598369752)
+      const featureIndexData = action.payload;
+      return {
+        ...state,
+        featureIndex: featureIndexData,
+      };
+    },
+
+
+// ********************************** PROJECT CRUD ********************************
+
+    projectRemove : (state, action) => {
+      return {
+        ...state,
+        projectData : state.projectData.filter(item => item._id !== action.payload)
       }
+    },
+
+    projectCreate : (state, action) => {
+      const newProject = action.payload
+      console.log(newProject)
+      return {
+        ...state,
+        projectData : [newProject, ...state.projectData]
+      }
+    },
+
+    projectEdit : (state, action) => {
+      console.log(action.payload)
+      return {
+        ...state,
+        edit : {project : action.payload, isEdit : true}
+      }
+    },
+
+    projectUpdate:(state,action) => {
+      // const {id,title} = action.payload
+      // const info = [...state.projectData]
+      // console.log(info, "info")
+      // info.splice(id,1,action.payload)
+      // return{
+      //   ...state,
+      //   projectData: info
+      // }
+
+      
+    return {
+      ...state,
+      projectData : state.projectData.map(item => item._id === action.payload._id ? action.payload : item)
     }
+    },
+
   },
+
+
+
+    // ********************************** FEATURE CRUD ********************************
+
+
+
   extraReducers: (builder) => {},
 });
 
-
-export const {indexUpdate} = projectSlice.actions
+export const {projectUpdate, projectEdit, projectCreate, projectRemove, indexUpdate, featureIndexUpdate } = projectSlice.actions;
 export default projectSlice.reducer;

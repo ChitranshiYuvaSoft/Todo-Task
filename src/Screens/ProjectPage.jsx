@@ -1,12 +1,53 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ProjectList from "../Components/ProjectList";
 import FeaturePage from "./FeaturePage";
+import DataPage from "./DataPage";
+import { projectCreate, projectUpdate } from "../Redux/project/projectSlice";
 
 const ProjectPage = () => {
-  const { projectData } = useSelector((state) => state.project);
+  const { projectData, edit } = useSelector((state) => state.project);
   console.log(projectData);
+
+  if (!projectData || projectData.length === 0) {
+    return <DataPage />;
+  }
+
+  const dispatch = useDispatch();
+
+  // Form Setup
+  const [title, setTitle] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+
+//  title = editTitle;
+
+  // console.log(title)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert("project added");
+    dispatch(
+      projectCreate({
+        _id: crypto.randomUUID(),
+        title,
+      })
+    );
+    setTitle("");
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    dispatch(
+      projectUpdate({
+        _id: edit.project._id,
+        title : editTitle,
+      })
+    );
+  };
+
+  useEffect(() => {
+    setEditTitle(edit.project.title);
+  }, [edit]);
 
   return (
     <>
@@ -17,13 +58,19 @@ const ProjectPage = () => {
               type="text"
               placeholder="Enter Project Name Here"
               className="w-75 rounded-0 form-control py-2 px-3"
+              value={editTitle}
+              name="editTitle"
+              onChange={(e) => setEditTitle(e.target.value)}
             />
-            <button className="w-25 rounded-0 form-control btn btn-success py-2 px-3">
+            <button
+              className="w-25 rounded-0 form-control btn btn-success py-2 px-3"
+              onClick={handleUpdate}
+            >
               Save
             </button>
           </div>
           <div className="dataSec">
-            <ul className="w-100 list-group">
+            <ul className="w-100 list-group" >
               {projectData.map((project, index) => (
                 <ProjectList key={index} index={index} project={project} />
               ))}
@@ -31,12 +78,20 @@ const ProjectPage = () => {
           </div>
           <div className="footer">
             <div className="w-75">
-              <h2>ADD DATA HERE</h2>
+              <input
+                type="text"
+                className="rounded-0 form-control py-2 px-3"
+                style={{ fontSize: "1.3rem" }}
+                placeholder="Add New Project"
+                value={title}
+                name="title"
+                onChange={(e) => setTitle(e.target.value)}
+              />
             </div>
             <div className="w-25">
-              <div className="box">
+              <button className="box" type="submit" onClick={handleSubmit}>
                 <h2 className="fw-bold text-white">+</h2>
-              </div>
+              </button>
             </div>
           </div>
         </div>

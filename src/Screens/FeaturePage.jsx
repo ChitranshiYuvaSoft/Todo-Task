@@ -1,14 +1,23 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { featureIndexUpdate } from "../Redux/project/projectSlice";
+import DataPage from "./DataPage";
+import FeatureList from "../Components/FeatureList";
 
 const FeaturePage = ({ project }) => {
-  const { projectData } = useSelector((state) => state.project);
-  const {projectIndex} = useSelector((state) => state.project)
-  console.log(projectData[0].featureData[1], 33464575);
-console.log(projectIndex,"from feature")
-  const featureCollection = projectData[0].featureData;
-  console.log(featureCollection);
+  const { projectData, projectIndex } = useSelector((state) => state.project);
+  // console.log(projectData[0].featureData[1], 33464575);
+  // console.log(projectIndex, "from feature");
+  const featureCollection = projectData[projectIndex]?.featureData;
+  console.log(featureCollection, "83728937583758");
+
+  if (!featureCollection || featureCollection[projectIndex].todoData?.length === 0) {
+    return <DataPage />;
+  }
+
+
+
 
   return (
     <>
@@ -27,34 +36,8 @@ console.log(projectIndex,"from feature")
           <div className="dataSec">
             <ul className="w-100 list-group">
               {featureCollection.map((item, index) => (
-                <li key={index} className="list-group-item rounded-0 w-100 m-0">
-                  <Link to={"/project/feature/todo"}>
-                    <span>{item.title}</span>
-                  </Link>
-                  <span>
-                    <button className="btn btn-warning">Edit</button>
-                    <button className="btn btn-danger">Delete</button>
-                  </span>
-                </li>
+                <FeatureList key={index} index={index} item={item} />
               ))}
-              {/* <li className="list-group-item rounded-0 w-100 m-0">
-                <Link to={"/project/feature/todo"}>
-                  <span>Feature - 2 </span>
-                </Link>
-                <span>
-                  <button className="btn btn-warning">Edit</button>
-                  <button className="btn btn-danger">Delete</button>
-                </span>
-              </li>
-              <li className="list-group-item rounded-0 w-100 m-0">
-                <Link to={"/project/feature/todo"}>
-                  <span>Feature - 3 </span>
-                </Link>
-                <span>
-                  <button className="btn btn-warning">Edit</button>
-                  <button className="btn btn-danger">Delete</button>
-                </span>
-              </li> */}
             </ul>
           </div>
           <div className="footer">
