@@ -36,7 +36,7 @@ const FeaturePage = ({ project }) => {
           <div className="dataSec">
             <ul className="w-100 list-group">
               {featureCollection.map((item, index) => (
-                <FeatureList key={index} index={index} item={item} />
+                <FeatureList key={index} index={index} item={item} projectIndex={projectIndex}/>
               ))}
             </ul>
           </div>

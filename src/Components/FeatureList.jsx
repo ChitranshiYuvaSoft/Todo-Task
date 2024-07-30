@@ -1,9 +1,9 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { featureIndexUpdate } from "../Redux/project/projectSlice";
+import { featureIndexUpdate, featureRemove } from "../Redux/project/projectSlice";
 
-const FeatureList = ({ item, index }) => {
+const FeatureList = ({ item, index , projectIndex}) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -13,6 +13,13 @@ const FeatureList = ({ item, index }) => {
     navigate("/project/feature/todo");
   };
 
+  console.log(item)
+  const handleDelete = (_id, projectIndex) => {
+    console.log(_id)
+    console.log( dispatch(featureRemove({projectIndex, _id})))
+    dispatch(featureRemove({projectIndex, _id}))
+    console.log("DeleteFeature")
+  }
 
  
   return (
@@ -22,7 +29,7 @@ const FeatureList = ({ item, index }) => {
       {/* </Link> */}
       <span>
         <button className="btn btn-warning">Edit</button>
-        <button className="btn btn-danger">Delete</button>
+        <button className="btn btn-danger" onClick={() => handleDelete(item._id, projectIndex)}>Delete</button>
       </span>
     </li>
   );
