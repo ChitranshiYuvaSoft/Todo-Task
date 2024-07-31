@@ -4,22 +4,9 @@ import TodoList from "../Components/TodoList";
 import DataPage from "./DataPage";
 
 const TodoPage = () => {
-  const { projectData, featureIndex, projectIndex } = useSelector(
-    (state) => state.project
-  );
-  // console.log(featureIndex);
+ 
+  const {todoData} = useSelector(state => state.project)
 
-  const todoCollection =
-  projectData[projectIndex].featureData[featureIndex].todoData;
-  // console.log(todoCollection, "todo");
-  // console.log(projectData[projectIndex].featureData[featureIndex].todoData);
-// console.log(todoCollection.length)
-
-if(!todoCollection || todoCollection.length === 0){
-  return (
-    <DataPage/>
-  )
-}
   return (
     <>
       <div className="mainSec">
@@ -36,7 +23,7 @@ if(!todoCollection || todoCollection.length === 0){
           </div>
           <div className="dataSec">
             <ul className="w-100 list-group">
-              {todoCollection.map((todo, index) => (
+              {todoData.map((todo, index) => (
                <TodoList key={index} todo={todo} index={index}/>
               ))}
             </ul>

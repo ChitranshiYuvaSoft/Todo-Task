@@ -1,12 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { current } from "@reduxjs/toolkit";
 import Data from "../../Data";
-import projectData from "../../Data";
+import { featureData, projectData, todoData } from "../../DummyData";
+// import projectData from "../../Data";
 
-const initialState = {
-  projectIndex: 0,
-  featureIndex: 0,
-  projectData: Data,
+let initialState = {
+  // projectIndex: 0,
+  // featureIndex: 0,
+  // projectData: Data,
+  projectData: projectData,
+  featureData: featureData,
+  todoData: todoData,
   isSuccess: false,
   isError: false,
   isLoading: false,
@@ -38,11 +42,30 @@ const projectSlice = createSlice({
     // ********************************** PROJECT CRUD ********************************
 
     projectRemove: (state, action) => {
+      let featureInfo = [...featureData];
+      console.log(featureInfo);
+      console.log(action.payload);
+      let deletedIndex = [];
+      featureInfo.forEach((item, index) => {
+        if (item.project_id === action.payload) {
+          deletedIndex.push(index);
+        }
+      });
+
+      deletedIndex.sort((a, b) => b - a);
+      //  console.log(deletedIndex, "sort")
+
+      deletedIndex.forEach((index) => {
+        featureInfo.splice(index, 1);
+      });
+      console.log(featureInfo, "info");
+      console.log(featureData, "new feature");
       return {
         ...state,
         projectData: state.projectData.filter(
           (item) => item._id !== action.payload
         ),
+        featureData: featureInfo,
       };
     },
 
@@ -56,7 +79,6 @@ const projectSlice = createSlice({
     },
 
     projectEdit: (state, action) => {
-      console.log(action.payload);
       return {
         ...state,
         edit: { project: action.payload, isEdit: true },
@@ -69,40 +91,61 @@ const projectSlice = createSlice({
         projectData: state.projectData.map((item) =>
           item._id === action.payload._id ? action.payload : item
         ),
+        edit: { project: {}, isEdit: false },
       };
     },
 
+    // ********************************** FEATURE CRUD ********************************
 
-  // ********************************** FEATURE CRUD ********************************
+    featureRemove: (state, action) => {
+      return {
+        ...state,
+        featureData: state.featureData.filter(
+          (item) => item?._id !== action.payload
+        ),
+      };
+    },
 
+    featureCreate: (state, action) => {
+      console.log(action.payload);
+      const newProject = action.payload;
+      console.log(newProject);
+      return {
+        ...state,
+        featureData: [newProject, ...state.featureData],
+      };
+    },
 
-  featureRemove : (state, action) => {
-    const {projectIndex, _id} = action.payload
-    const data = current(state.projectData[projectIndex]?.featureData)
-    console.log(data, "data")
-    const newData = data.filter((item=> item._id !== _id)) 
-    console.log(newData, "newData")
-    return {
-      ...state,
-     
-    }
+    featureEdit: (state, action) => {
+      return {
+        ...state,
+        edit: { project: action.payload, isEdit: true },
+      };
+    },
+    featureUpdate: (state, action) => {
+      return {
+        ...state,
+        featureData: state.featureData.map((item) =>
+          item?._id === action.payload?._id ? action.payload : item
+        ),
+        edit: { project: {}, isEdit: false },
+      };
+    },
   },
-
-  featureCreate : (state, action) => {
-
-  },},
 
   extraReducers: (builder) => {},
 });
 
 export const {
+  featureEdit,
   projectUpdate,
   projectEdit,
   projectCreate,
   projectRemove,
   indexUpdate,
   featureIndexUpdate,
-
-  featureRemove
+  featureCreate,
+  featureRemove,
+  featureUpdate,
 } = projectSlice.actions;
 export default projectSlice.reducer;

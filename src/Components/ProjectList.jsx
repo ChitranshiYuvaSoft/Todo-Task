@@ -13,10 +13,11 @@ const navigate = useNavigate()
 
     const handleClick = (index) => {
         dispatch(indexUpdate(index))
-        navigate("/project/feature")
+        navigate(`/feature/${project._id}`)
     }
 
     const handleDelete = (_id) => {
+      console.log(_id)
       console.log("Delete Project Successfully!!");
       dispatch(projectRemove(_id));
       console.log(project)

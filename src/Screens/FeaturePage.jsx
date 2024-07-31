@@ -1,24 +1,54 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { featureIndexUpdate } from "../Redux/project/projectSlice";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  featureCreate,
+  featureIndexUpdate,
+  featureUpdate,
+} from "../Redux/project/projectSlice";
 import DataPage from "./DataPage";
 import FeatureList from "../Components/FeatureList";
 
-const FeaturePage = ({ project }) => {
-  const { projectData, projectIndex } = useSelector((state) => state.project);
-  // console.log(projectData[0].featureData[1], 33464575);
-  // console.log(projectIndex, "from feature");
-  const featureCollection = projectData[projectIndex]?.featureData;
-  console.log(featureCollection, "83728937583758");
-
-  if (!featureCollection || featureCollection[projectIndex].todoData?.length === 0) {
-    return <DataPage />;
-  }
+const FeaturePage = () => {
+  const { featureData, edit } = useSelector((state) => state.project);
+//  console.log(edit)
+  const dispatch = useDispatch();
+  const { _id } = useParams();
 
 
+  const dataFeature = featureData.filter((item) => item?.project_id == _id);
 
+  const [title, setTitle] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  // console.log(editTitle, "edit");
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(
+      featureCreate({
+        project_id: _id,
+        _id: crypto.randomUUID(),
+        title,
+      })
+    );
+    setTitle("");
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    dispatch(
+      featureUpdate({
+        _id: edit.project._id,
+        title: editTitle,
+        project_id : edit.project.project_id
+      })
+    );
+    setEditTitle("");
+  };
+
+  useEffect(() => {
+    setEditTitle(edit.project.title);
+  }, [edit]);
   return (
     <>
       <div className="mainSec">
@@ -28,26 +58,44 @@ const FeaturePage = ({ project }) => {
               type="text"
               placeholder="Enter Feature Name Here"
               className="w-75 rounded-0 form-control py-2 px-3"
+              value={editTitle || ""}
+              name="editTitle"
+              onChange={(e) => setEditTitle(e.target.value)}
             />
-            <button className="w-25 rounded-0 form-control btn btn-success py-2 px-3">
+            <button
+              className="w-25 rounded-0 form-control btn btn-success py-2 px-3"
+              onClick={handleUpdate}
+            >
               Save
             </button>
           </div>
           <div className="dataSec">
             <ul className="w-100 list-group">
-              {featureCollection.map((item, index) => (
-                <FeatureList key={index} index={index} item={item} projectIndex={projectIndex}/>
+              {dataFeature.map((feature, index) => (
+                <FeatureList key={index} index={index} feature={feature} />
               ))}
+
+              {
+                // featureData.filter(feature => feature.project_id == _id ?  : console.log("no Feature"))
+              }
             </ul>
           </div>
           <div className="footer">
             <div className="w-75">
-              <h2>Add DATA HERE</h2>
+              <input
+                type="text"
+                className="rounded-0 form-control py-2 px-3"
+                style={{ fontSize: "1.3rem" }}
+                placeholder="Add New Project"
+                value={title || ""}
+                name="title"
+                onChange={(e) => setTitle(e.target.value)}
+              />
             </div>
             <div className="w-25">
-              <div className="box">
+              <button className="box" type="submit" onClick={handleSubmit}>
                 <h2 className="fw-bold text-white">+</h2>
-              </div>
+              </button>
             </div>
           </div>
         </div>

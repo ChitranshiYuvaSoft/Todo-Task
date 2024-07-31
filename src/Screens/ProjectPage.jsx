@@ -25,7 +25,6 @@ const ProjectPage = () => {
   // console.log(title)
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("project added");
     dispatch(
       projectCreate({
         _id: crypto.randomUUID(),
@@ -43,6 +42,7 @@ const ProjectPage = () => {
         title : editTitle,
       })
     );
+    setEditTitle("")
   };
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const ProjectPage = () => {
               type="text"
               placeholder="Enter Project Name Here"
               className="w-75 rounded-0 form-control py-2 px-3"
-              value={editTitle}
+              value={editTitle || ""}
               name="editTitle"
               onChange={(e) => setEditTitle(e.target.value)}
             />
@@ -83,7 +83,7 @@ const ProjectPage = () => {
                 className="rounded-0 form-control py-2 px-3"
                 style={{ fontSize: "1.3rem" }}
                 placeholder="Add New Project"
-                value={title}
+                value={title || ""}
                 name="title"
                 onChange={(e) => setTitle(e.target.value)}
               />

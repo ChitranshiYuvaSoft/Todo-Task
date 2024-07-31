@@ -1,10 +1,12 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore} from "@reduxjs/toolkit";
 import projectReducer from "./project/projectSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
 
 const reducer = combineReducers({
   project: projectReducer,
+
+  
 });
 
 const persistConfig = {
@@ -19,6 +21,10 @@ const store = configureStore({
   //     // project : projectReducer,
   // },
   reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;
