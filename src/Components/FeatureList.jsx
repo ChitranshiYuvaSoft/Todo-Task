@@ -5,9 +5,11 @@ import {
   featureEdit,
   featureIndexUpdate,
   featureRemove,
+  todoRemoveByFeature,
 } from "../Redux/project/projectSlice";
 
-const FeatureList = ({ feature, index }) => {
+const FeatureList = ({ feature, index ,project_id}) => {
+  // console.log(project_id, 90350)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -18,11 +20,13 @@ const FeatureList = ({ feature, index }) => {
 
   const handleClick = (index) => {
     dispatch(featureIndexUpdate(index));
-    navigate(`/todo/${feature._id}`);
+    // navigate(`/todo/${feature._id}`);
+    navigate(`/project/${project_id}/feature/${feature._id}/todo`);
   };
 
   const handleDelete = (_id) => {
     dispatch(featureRemove(_id));
+    dispatch(todoRemoveByFeature(_id))
     // console.log("DeleteFeature");
   };
 

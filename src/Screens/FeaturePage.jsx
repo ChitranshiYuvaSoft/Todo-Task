@@ -15,7 +15,7 @@ const FeaturePage = () => {
   const dispatch = useDispatch();
   const { _id } = useParams();
 
-
+console.log(_id);
   const dataFeature = featureData.filter((item) => item?.project_id == _id);
 
   const [title, setTitle] = useState("");
@@ -72,7 +72,7 @@ const FeaturePage = () => {
           <div className="dataSec">
             <ul className="w-100 list-group">
               {dataFeature.map((feature, index) => (
-                <FeatureList key={index} index={index} feature={feature} />
+                <FeatureList key={index} index={index} feature={feature} project_id={_id} />
               ))}
 
               {

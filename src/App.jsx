@@ -7,8 +7,12 @@ const App = () => {
   return <Router>
     <Routes>
       <Route path="/" element={<ProjectPage/>}/>
-      <Route path="/feature/:_id" element={<FeaturePage/>}/>
-      <Route path="/todo/:_id" element={<TodoPage/>}/>
+      {/* <Route path="/feature/:_id" element={<FeaturePage/>}/> */}
+      <Route path="/project/:_id/feature" element={<FeaturePage/>}/>
+
+      {/* <Route path="/todo/:_id" element={<TodoPage/>}/> */}
+            <Route path="/project/:_id/feature/:_Feaid/todo" element={<TodoPage/>}/>
+
     </Routes>
   </Router>;
 };

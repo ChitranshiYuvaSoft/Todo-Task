@@ -1,8 +1,7 @@
 import React from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import FeaturePage from "../Screens/FeaturePage";
-import { useDispatch, useSelector } from "react-redux";
-import { indexUpdate, projectEdit, projectRemove } from "../Redux/project/projectSlice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { featureRemoveByProject, indexUpdate, projectEdit, projectRemove,  todoRemoveByProject } from "../Redux/project/projectSlice";
 
 const ProjectList = ({ index, project }) => {
 
@@ -13,13 +12,16 @@ const navigate = useNavigate()
 
     const handleClick = (index) => {
         dispatch(indexUpdate(index))
-        navigate(`/feature/${project._id}`)
+        // navigate(`/feature/${project._id}`)
+        navigate(`/project/${project._id}/feature`)
     }
 
     const handleDelete = (_id) => {
-      console.log(_id)
+      console.log(_id, "from project")
       console.log("Delete Project Successfully!!");
       dispatch(projectRemove(_id));
+      dispatch(featureRemoveByProject(_id))
+      dispatch(todoRemoveByProject(_id))
       console.log(project)
     }
 
