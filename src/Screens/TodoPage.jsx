@@ -1,63 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TodoList from "../Components/TodoList";
-import DataPage from "./DataPage";
-import { todoCreate } from "../Redux/project/projectSlice";
+import { todoCreate, todoUpdate } from "../Redux/project/projectSlice";
 import { useParams } from "react-router-dom";
 
 const TodoPage = () => {
- 
-  const dispatch = useDispatch()
-  const {todoData,  edit} = useSelector(state => state.project)
-console.log(todoData, "343645645700000000000")
+  const dispatch = useDispatch();
+  const { todoData, edit } = useSelector((state) => state.project);
+  const { _id, _Feaid } = useParams();
 
-// console.log(dataGet, "tulsi")
-  const {_id, _Feaid} = useParams();
-console.log(_id, _Feaid, "3345346")
-  // const dataTodo = todoData.filter((item) => item?.feature_id == _Feaid);
-
-
-  const dataTodo =  todoData.filter((item) => {
-    if(item.feature_id == _Feaid && item.project_id == _id){
-      return item
+  const dataTodo = todoData.filter((item) => {
+    if (item.feature_id == _Feaid && item.project_id == _id) {
+      return item;
     }
-    else{
-      console.log("No Data Yet!!");
-    }
-  })
+  });
 
-  const [title,setTitle] = useState();
+  // Todo Create And Update
+  const [title, setTitle] = useState();
   const [editTitle, setEditTitle] = useState("");
-
-  console.log(dataTodo, 9999999999)
-
   const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(todoCreate({
-      _id : crypto.randomUUID(),
-      title: title,
-      feature_id : _Feaid,
-      project_id : _id
+    e.preventDefault();
+    if(!title){
+      alert("Title is mandatory!!");
+    }else{
+      dispatch(
+        todoCreate({
+          _id: crypto.randomUUID(),
+          title: title,
+          feature_id: _Feaid,
+          project_id: _id,
+        })
+      );
+      setTitle("")
     }
-    ))
-  }
-
-  // const handleUpdate = (e) => {
-  //   e.preventDefault();
-  //   dispatch(
-  //   featureUpdate({
-  //       _id: edit.project._id,
-  //       title : editTitle,
-  //     })
-  //   );
-  //   setEditTitle("")
-  // };
-
-
-  
+  };
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    if(!editTitle){
+      alert("Title is mandatory!!");
+    }else{
+      dispatch(
+        todoUpdate({
+          _id: edit.project._id,
+          title: editTitle,
+          project_id: _id,
+          feature_id: _Feaid,
+        })
+      );
+      setEditTitle("");
+    }
+  };
   useEffect(() => {
     setEditTitle(edit.project.title);
   }, [edit]);
+
   return (
     <>
       <div className="mainSec">
@@ -67,27 +63,35 @@ console.log(_id, _Feaid, "3345346")
               type="text"
               placeholder="Enter Todo Name Here"
               className="w-75 rounded-0 form-control py-2 px-3"
+              value={editTitle || ""}
+              name="editTitle"
+              required
+              onChange={(e) => setEditTitle(e.target.value)}
             />
-            <button className="w-25 rounded-0 form-control btn btn-success py-2 px-3">
+            <button
+              className="w-25 rounded-0 form-control btn btn-success py-2 px-3"
+              onClick={handleUpdate}
+            >
               Save
             </button>
           </div>
           <div className="dataSec">
             <ul className="w-100 list-group">
               {dataTodo.map((todo, index) => (
-               <TodoList key={index} todo={todo} index={index}/>
+                <TodoList key={index} todo={todo} index={index} />
               ))}
             </ul>
           </div>
           <div className="footer">
             <div className="w-75">
-            <input
+              <input
                 type="text"
                 className="rounded-0 form-control py-2 px-3"
                 style={{ fontSize: "1.3rem" }}
                 placeholder="Add New Todo"
                 value={title || ""}
                 name="title"
+                required
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>

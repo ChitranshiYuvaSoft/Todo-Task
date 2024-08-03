@@ -1,45 +1,47 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { featureRemoveByProject, indexUpdate, projectEdit, projectRemove,  todoRemoveByProject } from "../Redux/project/projectSlice";
+import {
+  featureRemoveByProject,
+  projectEdit,
+  projectRemove,
+  todoRemoveByProject,
+} from "../Redux/project/projectSlice";
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import { HiClipboardCheck } from "react-icons/hi";
 
 const ProjectList = ({ index, project }) => {
-
-const dispatch = useDispatch()
-const navigate = useNavigate()
-
-// console.log(projectIndex)
-
-    const handleClick = (index) => {
-        dispatch(indexUpdate(index))
-        // navigate(`/feature/${project._id}`)
-        navigate(`/project/${project._id}/feature`)
-    }
-
-    const handleDelete = (_id) => {
-      console.log(_id, "from project")
-      console.log("Delete Project Successfully!!");
-      dispatch(projectRemove(_id));
-      dispatch(featureRemoveByProject(_id))
-      dispatch(todoRemoveByProject(_id))
-      console.log(project)
-    }
-
-    const handleEdit = (project) => {
-      console.log("Edit Project Successfully!!");
-      dispatch(projectEdit(project))
-    }
-
-    
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/project/${project._id}/feature`);
+  };
+  const handleDelete = (_id) => {
+    dispatch(todoRemoveByProject(_id));
+    dispatch(featureRemoveByProject(_id));
+    dispatch(projectRemove(_id));
+  };
+  const handleEdit = (project) => {
+    dispatch(projectEdit(project));
+  };
   return (
-    <li className="list-group-item rounded-0 w-100 m-0" >
-      {/* <Link to={"/project/feature"} project={project} > */}
-        {/* <span className="fw-bold" >{index + 1}</span> */}
-        <span className="" onClick={() => handleClick(index)}>{project?.title}</span>
-      {/* </Link> */}
+    <li className="list-group-item rounded-0 w-100 m-0">
+      <span className="" onClick={() => handleClick(index)}>
+        {project?.title}
+      </span>
       <span>
-        <button className="btn btn-warning" onClick={() => handleEdit(project)}>Edit</button>
-        <button className="btn btn-danger" onClick={() => handleDelete(project._id)}>Delete</button>
+        <button className="btn btn-warning m-2 " onClick={() => handleEdit(project)}>
+        <FaEdit className="fs-2 " />
+        </button>
+        <button
+          className="btn btn-danger m-2"
+          onClick={() => handleDelete(project._id)}>
+           <MdDeleteForever className="fs-2"/>
+        </button>
+        <button className="btn btn-success m-2">
+        <HiClipboardCheck className="fs-2"/>
+        </button>
       </span>
     </li>
   );

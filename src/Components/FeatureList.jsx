@@ -1,54 +1,47 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import {
   featureEdit,
-  featureIndexUpdate,
   featureRemove,
   todoRemoveByFeature,
 } from "../Redux/project/projectSlice";
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import { HiClipboardCheck } from "react-icons/hi";
 
-const FeatureList = ({ feature, index ,project_id}) => {
-  // console.log(project_id, 90350)
+const FeatureList = ({ feature, index, project_id }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // console.log(feature, "feateter6456758679")
-
-  const { _id } = useParams();
-
-
-  const handleClick = (index) => {
-    dispatch(featureIndexUpdate(index));
-    // navigate(`/todo/${feature._id}`);
+  const handleClick = () => {
     navigate(`/project/${project_id}/feature/${feature._id}/todo`);
   };
 
   const handleDelete = (_id) => {
     dispatch(featureRemove(_id));
-    dispatch(todoRemoveByFeature(_id))
-    // console.log("DeleteFeature");
+    dispatch(todoRemoveByFeature(_id));
   };
 
   const handleEdit = (feature) => {
-    console.log("Edit Project Successfully!!");
     dispatch(featureEdit(feature));
   };
 
   return (
     <li key={index} className="list-group-item rounded-0 w-100 m-0">
-      {/* <Link to={"/project/feature/todo"}> */}
-      <span onClick={() => handleClick(index)}>{feature.title}</span>
-      {/* </Link> */}
+      <span onClick={() => handleClick()}>{feature.title}</span>
       <span>
-        <button className="btn btn-warning" onClick={() => handleEdit(feature)}>
-          Edit
+        <button className="btn btn-warning m-2" onClick={() => handleEdit(feature)}>
+        <FaEdit className="fs-2" />
         </button>
         <button
-          className="btn btn-danger"
+          className="btn btn-danger m-2"
           onClick={() => handleDelete(feature._id)}
         >
-          Delete
+           <MdDeleteForever className="fs-2"/>
+        </button>
+        <button className="btn btn-success m-2">
+        <HiClipboardCheck className="fs-2"/>
         </button>
       </span>
     </li>

@@ -11,44 +11,49 @@ import FeatureList from "../Components/FeatureList";
 
 const FeaturePage = () => {
   const { featureData, edit } = useSelector((state) => state.project);
-//  console.log(edit)
+
   const dispatch = useDispatch();
   const { _id } = useParams();
 
-console.log(_id);
   const dataFeature = featureData.filter((item) => item?.project_id == _id);
 
+  // Feature Create and Update
   const [title, setTitle] = useState("");
   const [editTitle, setEditTitle] = useState("");
-  // console.log(editTitle, "edit");
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(
-      featureCreate({
-        project_id: _id,
-        _id: crypto.randomUUID(),
-        title,
-      })
-    );
-    setTitle("");
+    if(!title){
+      alert("Title is mandatory!!");
+    }else{
+      dispatch(
+        featureCreate({
+          project_id: _id,
+          _id: crypto.randomUUID(),
+          title,
+        })
+      );
+      setTitle("");
+    }
   };
-
   const handleUpdate = (e) => {
     e.preventDefault();
-    dispatch(
-      featureUpdate({
-        _id: edit.project._id,
-        title: editTitle,
-        project_id : edit.project.project_id
-      })
-    );
-    setEditTitle("");
+    if(!editTitle){
+      alert("Title is mandatory!!");
+    }else{
+      dispatch(
+        featureUpdate({
+          _id: edit.project._id,
+          title: editTitle,
+          project_id: edit.project.project_id,
+        })
+      );
+      setEditTitle("");
+    }
   };
-
   useEffect(() => {
     setEditTitle(edit.project.title);
   }, [edit]);
+
   return (
     <>
       <div className="mainSec">
@@ -60,6 +65,7 @@ console.log(_id);
               className="w-75 rounded-0 form-control py-2 px-3"
               value={editTitle || ""}
               name="editTitle"
+              required
               onChange={(e) => setEditTitle(e.target.value)}
             />
             <button
@@ -72,12 +78,13 @@ console.log(_id);
           <div className="dataSec">
             <ul className="w-100 list-group">
               {dataFeature.map((feature, index) => (
-                <FeatureList key={index} index={index} feature={feature} project_id={_id} />
+                <FeatureList
+                  key={index}
+                  index={index}
+                  feature={feature}
+                  project_id={_id}
+                />
               ))}
-
-              {
-                // featureData.filter(feature => feature.project_id == _id ?  : console.log("no Feature"))
-              }
             </ul>
           </div>
           <div className="footer">
@@ -89,6 +96,7 @@ console.log(_id);
                 placeholder="Add New Project"
                 value={title || ""}
                 name="title"
+                required
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>

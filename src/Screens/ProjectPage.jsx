@@ -1,50 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import ProjectList from "../Components/ProjectList";
-import FeaturePage from "./FeaturePage";
-import DataPage from "./DataPage";
 import { projectCreate, projectUpdate } from "../Redux/project/projectSlice";
 
 const ProjectPage = () => {
   const { projectData, edit } = useSelector((state) => state.project);
-  console.log(projectData);
-
-  if (!projectData || projectData.length === 0) {
-    return <DataPage />;
-  }
-
   const dispatch = useDispatch();
-
-  // Form Setup
+console.log(projectData,"projects")
+  // Project Create and Update
   const [title, setTitle] = useState("");
   const [editTitle, setEditTitle] = useState("");
-
-//  title = editTitle;
-
-  // console.log(title)
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(
-      projectCreate({
-        _id: crypto.randomUUID(),
-        title,
-      })
-    );
-    setTitle("");
+    if(!title){
+      alert("Title is mandatory!!");
+    }else{
+      dispatch(
+        projectCreate({
+          _id: crypto.randomUUID(),
+          title,
+        })
+      );
+      setTitle(""); 
+    }
   };
-
   const handleUpdate = (e) => {
     e.preventDefault();
-    dispatch(
-      projectUpdate({
-        _id: edit.project._id,
-        title : editTitle,
-      })
-    );
-    setEditTitle("")
+    if(!editTitle){
+      alert("Title is mandatory!!");
+    }else{
+      dispatch(
+        projectUpdate({
+          _id: edit.project._id,
+          title : editTitle,
+        })
+      );
+      setEditTitle("")
+    }
   };
-
   useEffect(() => {
     setEditTitle(edit.project.title);
   }, [edit]);
@@ -60,6 +53,7 @@ const ProjectPage = () => {
               className="w-75 rounded-0 form-control py-2 px-3"
               value={editTitle || ""}
               name="editTitle"
+              required
               onChange={(e) => setEditTitle(e.target.value)}
             />
             <button
@@ -85,6 +79,7 @@ const ProjectPage = () => {
                 placeholder="Add New Project"
                 value={title || ""}
                 name="title"
+                required
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
